@@ -1,5 +1,6 @@
 #pragma once
 
+#include <com/microseconds.hpp>
 #include <cstdint>
 
 #include "address.hpp"
@@ -21,6 +22,9 @@ class socket {
 
     bool reuseaddr() const;
     void set_reuseaddr(bool);
+
+    com::microseconds timeout() const;
+    void set_timeout(com::microseconds);
 
     bool acceptconn() const;
     bool nonblock() const;

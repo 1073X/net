@@ -11,6 +11,8 @@
 #include <com/system_warn.hpp>
 #include <log/log.hpp>
 
+#include "sockopt.hpp"
+
 namespace miu::net {
 
 // static int32_t
@@ -46,15 +48,6 @@ socket::~socket() {
     ::close(_raw);
 }
 
-template<typename T>
-T
-getsockopt(int32_t sock, int32_t option) {
-    T val;
-    socklen_t len = sizeof(val);
-    ::getsockopt(sock, SOL_SOCKET, option, (char*)&val, &len);
-    return val;
-}
-
 bool
 socket::reuseaddr() const {
     return getsockopt<int32_t>(_raw, SO_REUSEADDR) != 0;
@@ -62,13 +55,25 @@ socket::reuseaddr() const {
 
 void
 socket::set_reuseaddr(bool v) {
-    int32_t val = v ? 1 : 0;
-    ::setsockopt(_raw, SOL_SOCKET, SO_REUSEADDR, (const char*)&val, sizeof(val));
+    setsockopt(_raw, SO_REUSEADDR, v ? 1 : 0);
 }
 
 bool
 socket::acceptconn() const {
     return getsockopt<int32_t>(_raw, SO_ACCEPTCONN) != 0;
+}
+
+com::microseconds
+socket::timeout() const {
+    auto val = getsockopt<struct timeval>(_raw, SO_RCVTIMEO);
+    return { val.tv_sec * 1000000 + val.tv_usec };
+}
+
+void
+socket::set_timeout(com::microseconds val) {
+    time_t sec = val.count() / 1000000;
+    suseconds_t usec = val.count() % 1000000;
+    setsockopt(_raw, SO_RCVTIMEO, timeval { sec, usec });
 }
 
 bool
