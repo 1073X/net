@@ -27,6 +27,12 @@ class socket {
     com::microseconds timeout() const;
     void set_timeout(com::microseconds);
 
+    int32_t sndbuf() const;
+    void set_sndbuf(int32_t);
+
+    int32_t rcvbuf() const;
+    void set_rcvbuf(int32_t);
+
     bool acceptconn() const;
     bool nonblock() const;
 

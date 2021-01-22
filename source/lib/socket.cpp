@@ -53,11 +53,28 @@ socket::type() const {
     return getsockopt<int32_t>(_raw, SO_TYPE);
 }
 
+int32_t
+socket::sndbuf() const {
+    return getsockopt<int32_t>(_raw, SO_SNDBUF);
+}
+void
+socket::set_sndbuf(int32_t v) {
+    setsockopt(_raw, SO_SNDBUF, v);
+}
+
+int32_t
+socket::rcvbuf() const {
+    return getsockopt<int32_t>(_raw, SO_RCVBUF);
+}
+void
+socket::set_rcvbuf(int32_t v) {
+    setsockopt(_raw, SO_RCVBUF, v);
+}
+
 bool
 socket::reuseaddr() const {
     return getsockopt<int32_t>(_raw, SO_REUSEADDR) != 0;
 }
-
 void
 socket::set_reuseaddr(bool v) {
     setsockopt(_raw, SO_REUSEADDR, v ? 1 : 0);

@@ -21,4 +21,17 @@ tcpsock::create_server(std::string_view interface, std::string_view service) {
     return {};
 }
 
+socket
+tcpsock::create_client(std::string_view host, std::string_view port) {
+    auto sock = socket { AF_INET, SOCK_STREAM };
+    if (sock) {
+        tcpaddr addr { host, port };
+        if (sock.connect(addr)) {
+            return sock;
+        }
+    }
+
+    return {};
+}
+
 }    // namespace miu::net
