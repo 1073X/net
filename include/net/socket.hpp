@@ -38,6 +38,7 @@ class socket {
     void set_rcvbuf(int32_t);
 
     bool nonblock() const;
+    void set_nonblock(bool);
 
     bool bind(address const&);
     bool listen();

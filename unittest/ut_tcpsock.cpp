@@ -13,7 +13,6 @@ TEST(ut_tcpsock, server) {
     EXPECT_EQ(SOCK_STREAM, sock.type());
     EXPECT_TRUE(sock.reuseaddr());
     EXPECT_TRUE(sock.acceptconn());
-    EXPECT_FALSE(sock.nonblock());
 }
 
 TEST(ut_tcpsock, client) {
@@ -44,11 +43,26 @@ TEST(ut_tcpsock, client) {
     thrd.join();
 }
 
+TEST(ut_tcpsock, nonblock) {
+    auto sock = tcpsock::create_server("0.0.0.0", "15000");
+    EXPECT_FALSE(sock.nonblock());
+
+    sock.set_nonblock(true);
+    EXPECT_TRUE(sock.nonblock());
+
+    sock.set_nonblock(false);
+    EXPECT_FALSE(sock.nonblock());
+}
+
 TEST(ut_tcpsock, nodelay) {
     auto sock = tcpsock::create_server("0.0.0.0", "15000");
     EXPECT_FALSE(sock.nodelay());
+
     sock.set_nodelay(true);
     EXPECT_TRUE(sock.nodelay());
+
+    sock.set_nodelay(false);
+    EXPECT_FALSE(sock.nodelay());
 }
 
 TEST(ut_tcpsock, sndbuf) {

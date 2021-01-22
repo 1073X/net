@@ -116,6 +116,16 @@ bool
 socket::nonblock() const {
     return (::fcntl(_raw, F_GETFL) & O_NONBLOCK) != 0;
 }
+void
+socket::set_nonblock(bool v) {
+    auto flags = ::fcntl(_raw, F_GETFL);
+    if (v) {
+        flags |= O_NONBLOCK;
+    } else {
+        flags &= ~O_NONBLOCK;
+    }
+    ::fcntl(_raw, F_SETFL, flags);
+}
 
 bool
 socket::bind(address const& addr) {
