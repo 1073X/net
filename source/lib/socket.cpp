@@ -3,10 +3,11 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <string.h>        // strerror
-#include <sys/socket.h>    // socket
-#include <sys/types.h>     // getsockopt
-#include <unistd.h>        // close
+#include <netinet/tcp.h>    // TCP_NODELAY
+#include <string.h>         // strerror
+#include <sys/socket.h>     // socket
+#include <sys/types.h>      // getsockopt
+#include <unistd.h>         // close
 
 #include <com/system_warn.hpp>
 #include <log/log.hpp>
@@ -51,6 +52,19 @@ socket::~socket() {
 int32_t
 socket::type() const {
     return getsockopt<int32_t>(_raw, SO_TYPE);
+}
+
+bool
+socket::nodelay() const {
+    int32_t val;
+    socklen_t len = sizeof(val);
+    ::getsockopt(_raw, IPPROTO_TCP, TCP_NODELAY, (char*)&val, &len);
+    return val != 0;
+}
+void
+socket::set_nodelay(bool v) {
+    auto val = v ? 1 : 0;
+    ::setsockopt(_raw, IPPROTO_TCP, TCP_NODELAY, (const char*)&val, sizeof(val));
 }
 
 int32_t

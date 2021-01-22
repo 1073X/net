@@ -44,6 +44,13 @@ TEST(ut_tcpsock, client) {
     thrd.join();
 }
 
+TEST(ut_tcpsock, nodelay) {
+    auto sock = tcpsock::create_server("0.0.0.0", "15000");
+    EXPECT_FALSE(sock.nodelay());
+    sock.set_nodelay(true);
+    EXPECT_TRUE(sock.nodelay());
+}
+
 TEST(ut_tcpsock, sndbuf) {
     auto sock = tcpsock::create_server("0.0.0.0", "15000");
 

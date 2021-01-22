@@ -20,6 +20,7 @@ class socket {
 
     auto raw() const { return _raw; }
     int32_t type() const;
+    bool acceptconn() const;
 
     bool reuseaddr() const;
     void set_reuseaddr(bool);
@@ -27,13 +28,15 @@ class socket {
     com::microseconds timeout() const;
     void set_timeout(com::microseconds);
 
+    bool nodelay() const;
+    void set_nodelay(bool);
+
     int32_t sndbuf() const;
     void set_sndbuf(int32_t);
 
     int32_t rcvbuf() const;
     void set_rcvbuf(int32_t);
 
-    bool acceptconn() const;
     bool nonblock() const;
 
     bool bind(address const&);
