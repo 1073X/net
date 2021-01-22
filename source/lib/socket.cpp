@@ -2,6 +2,7 @@
 #include "net/socket.hpp"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <string.h>        // strerror
 #include <sys/socket.h>    // socket
 #include <sys/types.h>     // getsockopt
@@ -47,9 +48,20 @@ socket::reuseaddr() const {
     return getsockopt<int32_t>(_raw, SO_REUSEADDR) != 0;
 }
 
+void
+socket::set_reuseaddr(bool v) {
+    int32_t val = v ? 1 : 0;
+    ::setsockopt(_raw, SOL_SOCKET, SO_REUSEADDR, (const char*)&val, sizeof(val));
+}
+
 bool
 socket::acceptconn() const {
     return getsockopt<int32_t>(_raw, SO_ACCEPTCONN) != 0;
+}
+
+bool
+socket::nonblock() const {
+    return (::fcntl(_raw, F_GETFL) & O_NONBLOCK) != 0;
 }
 
 bool

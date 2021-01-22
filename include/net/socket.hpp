@@ -20,7 +20,10 @@ class socket {
     auto raw() const { return _raw; }
 
     bool reuseaddr() const;
+    void set_reuseaddr(bool);
+
     bool acceptconn() const;
+    bool nonblock() const;
 
     bool bind(address const&);
     bool listen();
