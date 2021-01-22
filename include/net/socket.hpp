@@ -34,7 +34,7 @@ class socket {
     socket accept();
     bool connect(address const&);
 
-    bool send(const void* data, uint32_t size);
+    int32_t send(const void* data, uint32_t size);
     int32_t recv(void* buf, uint32_t len);
 
   private:

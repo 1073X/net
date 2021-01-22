@@ -121,22 +121,22 @@ socket::connect(address const& addr) {
     return true;
 }
 
-bool
+int32_t
 socket::send(const void* data, uint32_t size) {
-    auto err = ::send(_raw, data, size, MSG_NOSIGNAL);
-    if (err < 0) {
+    auto sent = ::send(_raw, data, size, MSG_NOSIGNAL);
+    if (sent < 0) {
         log::error(+"socket send", errno, (const char*)strerror(errno));
     }
-    return err > 0;
+    return sent;
 }
 
 int32_t
 socket::recv(void* buf, uint32_t len) {
-    auto recv_len = ::recvfrom(_raw, buf, len, MSG_NOSIGNAL, nullptr, nullptr);
-    if (recv_len < 0) {
+    auto rcvd = ::recvfrom(_raw, buf, len, MSG_NOSIGNAL, nullptr, nullptr);
+    if (rcvd < 0) {
         log::error(+"socket recv", errno, (const char*)strerror(errno));
     }
-    return recv_len;
+    return rcvd;
 }
 
 }    // namespace miu::net

@@ -47,7 +47,7 @@ TEST(ut_udsock, client) {
         EXPECT_TRUE(cli);
 
         // send a few bytes
-        EXPECT_TRUE(cli.send("def", 4));
+        EXPECT_EQ(4, cli.send("def", 4));
     });
     ready.get_future().get();    // waiting for server get ready for accept
 
@@ -75,7 +75,7 @@ TEST(ut_udsock, recv_failed) {
     thrd.join();    // waiting for server stop
 
     char buf[8] {};
-    EXPECT_GE(0U, sock.recv(buf, sizeof(buf)));
+    EXPECT_GE(0, sock.recv(buf, sizeof(buf)));
 }
 
 TEST(ut_udsock, send_failed) {
@@ -90,6 +90,6 @@ TEST(ut_udsock, send_failed) {
     auto sock = udsock::create_client("ut_udsock");
     thrd.join();    // waiting for server stop
 
-    EXPECT_FALSE(sock.send("abc", 4));
+    EXPECT_GE(0, sock.send("abc", 4));
 }
 
