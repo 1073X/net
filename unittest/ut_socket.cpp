@@ -1,12 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "net/socket.hpp"
-#include "net/tempfs.hpp"
-#include "net/udsock.hpp"
-#include "source/lib/udsaddr.hpp"
-
-namespace fs = std::filesystem;
-using miu::net::tempfs;
 
 TEST(ut_socket, default) {
     miu::net::socket sock;
@@ -15,23 +9,15 @@ TEST(ut_socket, default) {
     EXPECT_TRUE(!sock);
 }
 
-TEST(ut_socket, udsock_server) {
-    auto path = tempfs.path();
-    tempfs.reset(".");
+TEST(ut_socket, move) {
+    miu::net::socket sock { 99 };
 
-    auto sock = miu::net::udsock::create_server("ut_socket");
-    EXPECT_TRUE(sock);
-    EXPECT_FALSE(sock.reuse_addr());
+    miu::net::socket sock2 { std::move(sock) };
+    EXPECT_EQ(99, sock2.raw());
+    EXPECT_EQ(-1, sock.raw());    // NOLINT: testing move
 
-    EXPECT_TRUE(tempfs.exists("ut_socket.uds"));
-    auto exp = fs::perms::owner_read | fs::perms::owner_write | fs::perms::owner_exec
-               | fs::perms::group_read | fs::perms::group_write | fs::perms::group_exec;
-    auto status = fs::status(tempfs.join("ut_socket.uds"));
-    EXPECT_EQ(exp, status.permissions());
-
-    // cann't be duplicated
-    EXPECT_FALSE(miu::net::udsock::create_server("ut_socket"));
-
-    tempfs.remove("ut_socket.uds");
-    tempfs.reset(path.string());
+    miu::net::socket sock3 { 100 };
+    sock2 = std::move(sock3);
+    EXPECT_EQ(100, sock2.raw());
+    EXPECT_EQ(99, sock3.raw());    // NOLINT: testing move
 }
