@@ -4,6 +4,8 @@
 
 namespace miu::net {
 
-struct tcpsock {};
+struct tcpsock {
+    static socket create_server(std::string_view interface, std::string_view service);
+};
 
 }    // namespace miu::net

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <arpa/inet.h>
-#include <netdb.h>    // getaddrinfo
+#include <netdb.h>     // getaddrinfo
+#include <string.h>    // memset
 
 #include "net/socket.hpp"
 
