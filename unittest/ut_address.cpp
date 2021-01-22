@@ -16,5 +16,5 @@ TEST(ut_address, udsaddr) {
     EXPECT_NE(nullptr, addr.raw());
     EXPECT_EQ(AF_UNIX, addr.family());
     EXPECT_EQ(sizeof(sockaddr_un), addr.len());
-    EXPECT_EQ("/tmp/miu/ut_address.uds", addr.str());
+    EXPECT_EQ("ut_address", addr.str());
 }
