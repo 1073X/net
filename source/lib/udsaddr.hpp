@@ -17,7 +17,7 @@ class udsaddr : public address {
     int32_t family() const override { return _raw.sun_family; }
     uint32_t len() const override { return sizeof(_raw); }
 
-    std::string_view str() const override { return _raw.sun_path + 1; }
+    std::string str() const override { return _raw.sun_path + 1; }
 
   private:
     sockaddr_un _raw {};
