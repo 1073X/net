@@ -48,6 +48,11 @@ socket::~socket() {
     ::close(_raw);
 }
 
+int32_t
+socket::type() const {
+    return getsockopt<int32_t>(_raw, SO_TYPE);
+}
+
 bool
 socket::reuseaddr() const {
     return getsockopt<int32_t>(_raw, SO_REUSEADDR) != 0;

@@ -19,6 +19,7 @@ class socket {
     operator bool() const { return !operator!(); }
 
     auto raw() const { return _raw; }
+    int32_t type() const;
 
     bool reuseaddr() const;
     void set_reuseaddr(bool);
