@@ -4,6 +4,6 @@
 
 namespace miu::net {
 
-extern com::directory tempfs;
+extern com::directory tempfs;    // NOLINT
 
 }
