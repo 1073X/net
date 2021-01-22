@@ -2,7 +2,7 @@
 
 #include "net/address.hpp"
 #include "source/lib/tcpaddr.hpp"
-#include "source/lib/udsaddr.hpp"
+#include "source/lib/udaddr.hpp"
 
 TEST(ut_address, default) {
     miu::net::address addr;
@@ -12,8 +12,8 @@ TEST(ut_address, default) {
     EXPECT_EQ("unknown address", addr.str());
 }
 
-TEST(ut_address, udsaddr) {
-    miu::net::udsaddr addr { "ut_address" };
+TEST(ut_address, udaddr) {
+    miu::net::udaddr addr { "ut_address" };
     EXPECT_NE(nullptr, addr.raw());
     EXPECT_EQ(AF_UNIX, addr.family());
     EXPECT_EQ(sizeof(sockaddr_un), addr.len());

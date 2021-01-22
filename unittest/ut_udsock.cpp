@@ -4,13 +4,14 @@
 #include <thread>
 
 #include "net/udsock.hpp"
-#include "source/lib/udsaddr.hpp"
+#include "source/lib/udaddr.hpp"
 
 using miu::net::udsock;
 
 TEST(ut_udsock, server) {
     auto sock = udsock::create_server("ut_udsock");
     EXPECT_TRUE(sock);
+    EXPECT_EQ(SOCK_STREAM, sock.type());
     EXPECT_FALSE(sock.reuseaddr());
     EXPECT_TRUE(sock.acceptconn());
     EXPECT_FALSE(sock.nonblock());

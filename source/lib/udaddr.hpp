@@ -6,9 +6,9 @@
 
 namespace miu::net {
 
-class udsaddr : public address {
+class udaddr : public address {
   public:
-    udsaddr(std::string_view name) {
+    udaddr(std::string_view name) {
         _raw.sun_family = AF_UNIX;
         strncpy(_raw.sun_path + 1, name.data(), sizeof(_raw.sun_path));
     }
