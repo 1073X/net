@@ -3,10 +3,11 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <string.h>        // strerror
-#include <sys/socket.h>    // socket
-#include <sys/types.h>     // getsockopt
-#include <unistd.h>        // close
+#include <netinet/tcp.h>    // TCP_NODELAY
+#include <string.h>         // strerror
+#include <sys/socket.h>     // socket
+#include <sys/types.h>      // getsockopt
+#include <unistd.h>         // close
 
 #include <com/system_warn.hpp>
 #include <log/log.hpp>
@@ -48,11 +49,46 @@ socket::~socket() {
     ::close(_raw);
 }
 
+int32_t
+socket::type() const {
+    return getsockopt<int32_t>(_raw, SO_TYPE);
+}
+
+bool
+socket::nodelay() const {
+    int32_t val;
+    socklen_t len = sizeof(val);
+    ::getsockopt(_raw, IPPROTO_TCP, TCP_NODELAY, (char*)&val, &len);
+    return val != 0;
+}
+void
+socket::set_nodelay(bool v) {
+    auto val = v ? 1 : 0;
+    ::setsockopt(_raw, IPPROTO_TCP, TCP_NODELAY, (const char*)&val, sizeof(val));
+}
+
+int32_t
+socket::sndbuf() const {
+    return getsockopt<int32_t>(_raw, SO_SNDBUF);
+}
+void
+socket::set_sndbuf(int32_t v) {
+    setsockopt(_raw, SO_SNDBUF, v);
+}
+
+int32_t
+socket::rcvbuf() const {
+    return getsockopt<int32_t>(_raw, SO_RCVBUF);
+}
+void
+socket::set_rcvbuf(int32_t v) {
+    setsockopt(_raw, SO_RCVBUF, v);
+}
+
 bool
 socket::reuseaddr() const {
     return getsockopt<int32_t>(_raw, SO_REUSEADDR) != 0;
 }
-
 void
 socket::set_reuseaddr(bool v) {
     setsockopt(_raw, SO_REUSEADDR, v ? 1 : 0);
@@ -79,6 +115,16 @@ socket::set_timeout(com::microseconds val) {
 bool
 socket::nonblock() const {
     return (::fcntl(_raw, F_GETFL) & O_NONBLOCK) != 0;
+}
+void
+socket::set_nonblock(bool v) {
+    auto flags = ::fcntl(_raw, F_GETFL);
+    if (v) {
+        flags |= O_NONBLOCK;
+    } else {
+        flags &= ~O_NONBLOCK;
+    }
+    ::fcntl(_raw, F_SETFL, flags);
 }
 
 bool
