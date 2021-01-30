@@ -31,25 +31,25 @@ delivery:
         - ./build debug
         - ./build release
 
-          #- mkdir -p $INC_PATH
-          #- rm -fr $INC_PATH/com
-          #- cp -frv ./include/com $INC_PATH
+        - mkdir -p $INC_PATH
+        - rm -fr $INC_PATH/net
+        - cp -frv ./include/net $INC_PATH
 
-          #- mkdir -p $DBG_PATH
-          #- cp -fv debug/libcom.a $DBG_PATH
+        - mkdir -p $DBG_PATH
+        - cp -fv debug/libnet.a $DBG_PATH
 
-          #- mkdir -p $REL_PATH
-          #- cp -fv release/libcom.a $REL_PATH
+        - mkdir -p $REL_PATH
+        - cp -fv release/libnet.a $REL_PATH
 
-          #- mkdir -p $UT_PATH
-          #- cp -fv release/ut_com $UT_PATH
+        - mkdir -p $UT_PATH
+        - cp -fv release/ut_net $UT_PATH
 
     only:
         - master
 
-downstream-project:
+asp:
     stage: trigger
     script:
-        - echo "curl -X POST -F token=<downstream-project-token> -F ref=master <url>/api/v4/projects/<downstream-project-id>/trigger/pipeline"
+        - curl -X POST -F token=6e12a151c6bc41923513bf91baca20 -F ref=master $GITLAB_URL/api/v4/projects/13/trigger/pipeline
     only:
         - master
