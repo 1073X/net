@@ -10,9 +10,9 @@ namespace miu::net {
 class socket {
   public:
     socket(int32_t = -1);
+    socket(int32_t family, int32_t type);
     socket(socket&&);
     socket& operator=(socket&&);
-    socket(int32_t family, int32_t type);
     ~socket();
 
     auto operator!() const { return _raw < 0; }
