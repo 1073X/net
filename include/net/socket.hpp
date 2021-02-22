@@ -1,7 +1,7 @@
 #pragma once
 
-#include <com/microseconds.hpp>
 #include <cstdint>
+#include <time/delta.hpp>
 
 #include "address.hpp"
 
@@ -25,8 +25,8 @@ class socket {
     bool reuseaddr() const;
     void set_reuseaddr(bool);
 
-    com::microseconds timeout() const;
-    void set_timeout(com::microseconds);
+    time::delta timeout() const;
+    void set_timeout(time::delta);
 
     bool nodelay() const;
     void set_nodelay(bool);
