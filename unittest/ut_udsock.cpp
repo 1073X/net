@@ -39,10 +39,10 @@ TEST_F(ut_udsock, server) {
 TEST_F(ut_udsock, accept_timeout) {
     auto sock = udsock::create_server("ut_udsock");
 
-    EXPECT_EQ(miu::com::microseconds::zero(), sock.timeout());
+    EXPECT_EQ(miu::time::delta::zero(), sock.timeout());
 
-    sock.set_timeout(12000us);
-    EXPECT_EQ(12000, sock.timeout().count());
+    sock.set_timeout(100ms);
+    EXPECT_EQ(100, sock.timeout().count());
 
     EXPECT_FALSE(sock.accept());    // should timeout
 }

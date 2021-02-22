@@ -90,14 +90,16 @@ bool socket::acceptconn() const {
     return getsockopt<int32_t>(_raw, SO_ACCEPTCONN) != 0;
 }
 
-com::microseconds socket::timeout() const {
-    auto val = getsockopt<struct timeval>(_raw, SO_RCVTIMEO);
-    return { val.tv_sec * 1000000 + val.tv_usec };
+time::delta socket::timeout() const {
+    auto val              = getsockopt<struct timeval>(_raw, SO_RCVTIMEO);
+    time::delta::rep sec  = val.tv_sec * 1000;
+    time::delta::rep usec = val.tv_usec / 1000;
+    return { sec + usec };
 }
 
-void socket::set_timeout(com::microseconds val) {
-    time_t sec       = val.count() / 1000000;
-    suseconds_t usec = val.count() % 1000000;
+void socket::set_timeout(time::delta val) {
+    time_t sec       = val.count() / 1000;
+    suseconds_t usec = (val.count() % 1000) * 1000;
     setsockopt(_raw, SO_RCVTIMEO, timeval { sec, usec });
 }
 
